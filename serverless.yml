@@ -1,0 +1,29 @@
+service: serverless
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  stage: ${opt:stage, 'v1'}
+  timeout: 500
+  region: us-east-1
+
+  plugins:  
+  - serverless-plugin-typescript
+  - serverless-offline
+
+package:
+  exclude:
+    - "**/*.ts"
+    - "test/**"
+    - "scripts/**"
+    - ".vscode/**"
+    - "*"
+  excludeDevDependencies: false 
+
+functions:
+  http:
+    handler: src/provider/lambda.http
+    timeout: 2
+    events:
+      - http: ANY /
+      - http: ANY /{proxy+}
